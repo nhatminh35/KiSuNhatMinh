@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+   
+
+    <title>Trang 1</title>
+</head>
+<body>
+  <form>
+    <div class="background">
+    <div class="mainpositon">    <div id= "main"> 
+      <div id="top">
+        <div id="time"> </div>
+        
+         <script>
+        function dongho() {
+        var time = new Date();
+        var gio = time.getHours();
+        var phut = time.getMinutes();
+        var giay = time.getSeconds();
+        if (gio < 10) 
+        gio = "0" + gio;
+        if (phut < 10) 
+        phut = "0" + phut;
+        if (giay < 10) 
+        giay = "0" + giay;
+        document.getElementById("time").innerHTML = gio + ":" + phut + ":" + giay;
+        setTimeout("dongho()", 1000);
+   
+        };
+        dongho();
+      
+        </script> 
+        
+         <h1 style="text-align:center;">WELCOM TO SMART HOME</h1>
+         <h3 style="text-align:center;"> NHÀ THÔNG MINH - SMART HOME</h3>
+         <div style="text-align: center; font-size: 50px;">
+          <a href="index.html"><b>Quay về trang chính</b></a>
+         
+        </div>  
+        <div class="image_left">
+       <img src="img/anhtruong.png"  width="100" height="100">
+        </div>
+        <div class="image_right">
+          <img src="img/anhtruong.png"  width="100" height="100">
+           </div>
+
+  <div class ="fontmain">
+ 
+</div>
+<div class ="nhietdo">
+   <p><b>Nhiệt Độ <span id="nhietdo"></span></b>°C</p >
+   </div>
+   <div class ="doam">
+    <p><b>Độ ẩm: <span id="doam"></span></b>%</p>
+  </div>
+  <div class ="fontname">
+    <h2 style="text-align:center;"> Nguyễn Công Nhật Minh - Lê Bình An</h2>
+    </div>
+  </form>
+
+   
+  </form>
+<!----  <h2 style="text-align:center;"> Nguyễn Công Nhật Minh - Lê Bình An</h2> -->
+ 
+</main>
+   
+  <div class="top">
+  <div class="postion_chart">
+  <canvas id="myChart" style="width:500%;max-width:500px"></canvas>
+  <canvas id="WeChart" style="width:500%;max-width:500px"></canvas>
+</div>
+  <div class="bottom" >
+
+    <div class = right>
+      <div class="top">
+        <div class="container">
+            <div class="square-box">
+              <div class="image-container">
+              <div class="device-container">
+              
+                <img id="device1" src="img/fan_off.png" class="lamp" alt="Đèn 1">
+                <img id="device2" src="img/fan_off.png" class="lamp" alt="Đèn 2">
+                <img id="device3" src="img/lamp_off.png" class="lamp" alt="Đèn 3">
+                <img id="device4" src="img/lamp_off.png" class="lamp" alt="Đèn 4">
+                </div>
+              </div>
+            </div>
+         
+          
+               <div class="bottom">
+               
+            <button type="button" id="btn1" class="btn waves-effect waves-lights"style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">On_1</button>
+            <button type="button" id="btn2" class="btn waves-effect waves-lights"style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">Off_1</button><br><br>
+            <!-- label hien thi text hoac cac chu dan hien thi tren web -->
+            <button type="button" id="btn3" class="btn waves-effect waves-lights" style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">on_2</button>
+            <button type="button" id="btn4" class="btn waves-effect waves-lights" style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">off_2</button><br><br>
+        
+            <button type="button" id="btn5" class="btn waves-effect waves-lights" style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">on_3</button>
+            <button type="button" id="btn6" class="btn waves-effect waves-lights" style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">off_3</button><br><br>
+        
+            <button type="button" id="btn7" class="btn waves-effect waves-lights" style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">on_4</button>
+            <button type="button" id="btn8" class="btn waves-effect waves-lights" style="padding: 5px 10px; font-size: 20px; height: 50px; min-width: 30px;">off_4</button><br><br>
+           
+
+               
+               </div>
+                </div>
+                  </div>
+                    </div>
+                      </div>
+                        </div>
+                          </div>   
+                            </div>    
+
+ 
+                            <div class="all">
+                              <button type="button" id="btn9" class="btn waves-effect waves-lights" style="padding: 10px 10px; font-size: 20px; height: 50px; min-width: 200px;">ON_ALL</button>
+                              <button type="button" id="btn10" class="btn waves-effect waves-lights" style="padding: 10px 10px; font-size: 20px; height: 50px; min-width: 200px;">OFF_ALL</button><br><br>
+                            </div>
+                            <div class ="ChangePage">
+                            <a href="page1.html" style="padding: 10px 70px;font-size: 20px; height: 50px; min-width: 500px; background-color: #20c997; color: white; text-decoration: none; border-radius: 10px;">Trang 2</a>
+                            <a href="page2.html" style="padding: 10px 70px;font-size: 20px; height: 50px; min-width: 500px; background-color: #20c997; color: white; text-decoration: none; border-radius: 10px;">Trang 3</a>
+                         
+                          </div> 
+                           </div>
+                            
+                            
+
+<form>
+
+
+    
+<script src="functions.js"></script>
+    
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    
+
+<script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script>
+<!-- lien ket voi functions.js -->
+<div class="bot">
+<script>
+
+   
+const xValues = [10,20,30,40,50,60,70,80,90,100];
+const randomData = xValues.map(() => Math.floor(Math.random() * (35 - 20 + 1)) + 20);
+
+new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{ 
+      data: randomData,  // Dữ liệu ngẫu nhiên
+      borderColor: "red",
+    }]
+  },
+  options: {
+    legend: { display: false },
+    title: {
+      display: true,
+      text: "Nhiệt Độ Hàng Giờ Tại Nhà"
+    }
+  }
+});
+
+  
+
+const yValues = [33, 27, 44, 24, 37, 15, 32, 22, 27, 44,66];
+const randomData1 = yValues.map(() => Math.floor(Math.random() * (35 - 20 + 1)) + 20);
+const barColors = ["red","green","blue","orange","brown","blue","purple","orange","yellow","green"];
+
+new Chart("WeChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: randomData1
+    }]
+  },
+  options: {
+      legend: {display: false},
+      title:{
+        display:true,
+      text:"Lượng Mưa Hàng Giờ Tại Home"
+    }
+  }
+  });
+
+        
+
+  </script>
+ </div>
+
+
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+ 
+    const firebaseConfig = {
+          apiKey: "AIzaSyDUYbFI63SZmYV9SAyj_MCZcduuisIqxxc",
+          authDomain: "minhnode-1eacf.firebaseapp.com",
+          databaseURL: "https://minhnode-1eacf-default-rtdb.firebaseio.com",
+          projectId: "minhnode-1eacf",
+          storageBucket: "minhnode-1eacf.firebasestorage.app",
+          messagingSenderId: "1007786576866",
+          appId: "1:1007786576866:web:0810872495a6184ae747bb",
+          measurementId: "G-YF59ZNWLKC"
+      };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+  //functions
+  // make sure that the name in ' ' match with name of your database child
+  function getFirebaseData() {
+        const tempRef = database.ref("/Sensor/temperature");
+        const humiRef = database.ref("/Sensor/humidity");
+
+        tempRef.on("value", (snapshot) => {
+            document.getElementById("nhietdo").innerText = snapshot.val();
+            document.getElementById("nhietdoDisplay").innerText = snapshot.val();
+        });
+
+        humiRef.on("value", (snapshot) => {
+            document.getElementById("doam").innerText = snapshot.val();
+            document.getElementById("doamDisplay").innerText = snapshot.val();
+        });
+    }
+    function saveTemperatureWithHumidity(nhietdo) {
+          database.ref("/Sensor/humidity").once("value").then((snapshot) => {
+              let doam = snapshot.val();
+              document.getElementById("doam").innerText = doam;
+              addRow(nhietdo, doam);
+          });
+      }
+    getFirebaseData();
+    function sendData() {
+           let nhietdo = document.getElementById("nhietdo").innerText; // Hoặc .textContent
+            localStorage.setItem("nhietdo", nhietdo);
+            let doam = document.getElementById("doam").innerText; // Hoặc .textContent
+            localStorage.setItem("doam",doam);
+        }
+
+
+      // Thêm dữ liệu vào bảng
+  
+</script>
+
+<script>
+  const alertSound = new Audio("mp3/coibaodong.mp3");
+
+  function checkAlert() {
+    const alertState = localStorage.getItem("tempAlarmE");
+    if (alertState === "on") {
+      if (alertSound.paused || alertSound.ended) {
+        alertSound.currentTime = 0;
+        alertSound.play();
+      }
+    } else {
+      alertSound.pause();
+      alertSound.currentTime = 0;
+    }
+  }
+
+  setInterval(checkAlert, 500);
+  
+  UpdateImage1();
+  UpdateImage2();
+  UpdateImage3();
+  UpdateImage4();
+  UpdateALL();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,256 @@
+body {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(243, 242, 242);
+
+}
+
+
+.square-box {
+    width: 300px; 
+    height: 300px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    border: 3px solid black;
+    float: left; /* Di chuyển sang phải */
+    position: relative; 
+    bottom: 680px;
+    right: 100px;
+    border-radius: 20px; /* Bo góc 20px */
+   
+}
+
+/* Thêm đường kẻ dọc và ngang chia thành 4 ô */
+.square-box::before,
+.square-box::after {
+    content: "";
+    position: absolute;
+    background-color: black;
+}
+.square-box::before { /* Đường kẻ dọc */
+    width: 2px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+.square-box::after { /* Đường kẻ ngang */
+    height: 2px;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+.device-container {
+    width: 90%;
+    height: 90%;
+    display: grid;
+    grid-template-columns: repeat(2, 4fr);
+    grid-template-rows: repeat(2, 4fr);
+    gap: 4px; /* Giảm khoảng cách giữa các ảnh */
+    justify-content: center;
+    align-items: top;
+}
+
+.lamp {
+    width: 145px; /* Kích thước ảnh nhỏ hơn */
+    height: 145px;
+    justify-content: center;
+    align-items: center;
+}
+
+#main{
+    min-height:1300px ;
+    width: 1500px;
+    background-color: rgba(158, 158, 158, 0.301);
+    background-image: url("b.jpg");
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px; /* Bo góc 20px */
+}
+#main #top{
+   min-height: 50px;
+   justify-content: center;
+   align-items: center;
+
+}
+#main #bot{
+    min-height: 50px;
+    justify-content: bottom;
+    align-items: bottom;
+
+}
+#main #right{
+    min-height: 50px;
+    justify-content: right;
+    align-items: right;
+
+}
+#main #left{
+    min-height: 50px;
+    justify-content: right;
+    align-items: right;
+
+}
+#time{
+    position: relative; 
+    font-family: tahoma;
+    left:700px;
+    font-size: 200%;
+    
+}
+.btn {
+    padding: 10px 10px;  /* Giảm padding để làm nhỏ button */
+    font-size: 20px;    /* Giảm kích thước chữ */
+    height: 20px;       /* Chiều cao nhỏ gọn */
+    min-width: 100px;    /* Độ rộng tối thiểu */
+    border-radius: 20px; /* Làm tròn góc để giống viên thuốc */
+    justify-content: center;
+    align-items: center;
+    bottom: 670px;  
+    gap: 4px;
+    right: 50px;
+   
+}
+.postion_chart{
+    position: relative; 
+    bottom: 280px;
+    left: 70px;
+     
+}
+.image-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa ảnh và button */
+}
+.container {
+    display: flex;
+    justify-content: space-between; /* Đặt biểu đồ bên trái, ảnh + button bên phải */
+    align-items: center;
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+}
+.chart-container {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+h1 {
+  font-family: "Dangrek", serif;
+  background: linear-gradient(45deg, #ff0000, #1a53ff, #ea01ff, #fcfc00);
+  background-clip: text;
+  color: transparent;
+  background-size: 400% 400%;
+  animation: gradient 3s infinite;
+}
+
+h2 {
+    color: #302f2f; /* Cam đậm, nổi bật trên nền xám */
+    font-family: times new roman;
+    font-size: 300%;
+
+}
+h3 {
+    font-family: "Dangrek", serif;
+    background: linear-gradient(45deg, #ff0000, #1a53ff, #ea01ff, #fcfc00);
+    background-clip: text;
+    color: transparent;
+    background-size: 400% 400%;
+    animation: gradient 3s infinite;
+  }
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.nhietdo{
+    position: relative; 
+    bottom: 150px;
+    right: -65%;
+   
+    font-size: 250%;
+}
+.doam{
+    position: relative; 
+    bottom: 250px;
+    right: 400px;
+    left: 300px;
+    font-size: 250%;
+}
+.fontmain{
+    position: relative; 
+    bottom: 135px;   
+    left: 0px;
+}
+.fontname{
+    position: relative; 
+    top: 520px;   
+    font-size: 50%;
+    right:5px;
+}
+.mainpositon{
+    position: relative; 
+    top: 120px;   
+    left:750px;  
+    size: 150%;
+}
+.all{
+    position: relative; 
+    top: 350px;   
+    left: 950px;
+    size: 250%;
+}   
+.ChangePage{
+    position: relative; 
+    bottom: 150px;   
+    left:550px;
+    size: 250%;
+}
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: lightgray;
+}
+.input-container {
+    margin-bottom: 20px;
+}
+.image_left{
+    position: relative; 
+    bottom:250px;   
+    left:100px; 
+}
+.image_right{
+    position: relative; 
+    bottom:360px;     
+    left:1250px
+}
+.btn_trang2{
+    position: fixed; /* Giữ nguyên vị trí trên màn hình */
+    bottom:1200px;
+    left:3500px; 
+    size: 550%;
+}
+.font-main{
+    font-size: 30px; 
+}
+.clear_storage{
+    position: fixed;
+    bottom:1120px;
+    left:3500px; 
+    size: 550%;
+}
+

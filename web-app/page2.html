@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng hiển thị dữ liệu từ Firebase</title>
+  <link rel="stylesheet" href="./style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script>
+ 
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clock with Alarm and Temperature</title>
+  <link rel="stylesheet" href = "./clock.css">
+  
+</head>
+<body id="mainBody">
+  <div class="container-clock-alarm">
+    <h1 class="rainbow-title" style="text-align:center;">CLOCK AND TEMPERATURE</h1>
+    <div class="clock-temp-wrapper">
+      <div class="left-panel">
+        <div class="clock-container" id="clock">
+          <div class="hand hour" id="hourHand"></div>
+          <div class="hand minute" id="minuteHand"></div>
+          <div class="hand second" id="secondHand"></div>
+          <div class="center-dot"></div>
+        </div>
+        <div id="numbers"></div>
+        <p>📅 Date: <span id="currentDate"></span></p>
+        <label for="alarmTime">⏰ Alarm Time:</label>
+        <input type="time" id="alarmTime">
+        <button onclick="setAlarm()">Set Alarm</button>
+        <button onclick="stopAlarm()">Stop Alarm</button>
+      </div>
+      <div class="right-panel">
+        <div class="alertDevices">
+          <div class="device1">
+              <img id="fanImage" src="img/fanoff1.png" alt="Quạt" width="100">
+              <p>Quạt</p>
+              <button id="device20" onclick="turnOnFan()">Bật</button>
+              <button id="device21" onclick="turnOffFan()">Tắt</button>
+          </div>
+          <div class="device2">
+              <img id="speakerImage" src="img/chuong_off.png" alt="Loa" width="100">
+              <p>Loa</p>
+              <button id="device22" onclick="turnOnSpeaker()">Bật</button>
+              <button id="device23" onclick="turnOffSpeaker()">Tắt</button>
+          </div>
+      </div>
+        <div class="position">      
+        <p>🌡️ Temperature: <span id="temperatureValue">--</span> °C</p>
+        <p>⚠️ Temperature Threshold:
+          <input type="number" id="tempThreshold" value="90" style="width:60px"> °C
+        </p>
+        <div class="alarm-toggle flex gap-4 justify-center mt-4">
+          <button onclick="enableTempAlarm()" class="flex items-center gap-2 px-6 py-4 bg-red-500 text-white rounded-xl text-lg font-semibold shadow hover:bg-red-600">
+            <img src="img/alarm.gif" class="alarm-icon w-8 h-8" alt="On"> Bật báo động
+          </button>
+          <button onclick="disableTempAlarm()" class="flex items-center gap-2 px-6 py-4 bg-gray-500 text-white rounded-xl text-lg font-semibold shadow hover:bg-gray-600">
+            <img src="img/alarm-off.png" class="alarm-icon w-8 h-8" alt="Off"> Tắt báo động
+          </button>
+          </div>
+        </div>        
+        <div id="tempWarning"></div>
+      </div>
+    </div>
+    <div class="button-group">
+      <a href="index.html" class="btn-blue">Quay về Trang 1</a>
+      <a href="page1.html" class="btn-green">Quay về Trang 2</a>
+    </div>
+  </div>
+  <script src="functions.js"></script>
+  <script>
+   
+    
+    let alarmTime = null;
+    let alarmSet = false;
+    let tempAlarmEnabled = true;
+    const alarmSound = new Audio("mp3/music.mp3");
+    const tempWarningSound = new Audio("mp3/coibaodong.mp3");
+   const check = 0;
+
+   function rengE() {
+  tempAlarmE = true;
+  localStorage.setItem("tempAlarmE", "on"); // Bật cảnh báo
+ 
+}
+function rengD() {
+  tempAlarmE = false;
+  localStorage.setItem("tempAlarmE", "off"); // Bật cảnh báo
+ 
+}
+
+
+
+   function enableTempAlarm() {
+  tempAlarmEnabled = true;
+  localStorage.setItem("alertState", "on"); // Bật cảnh báo
+  alert("Đã bật báo động nhiệt độ");
+}
+
+function disableTempAlarm() {
+  tempAlarmEnabled = false;
+  localStorage.setItem("alertState", "off"); // Tắt cảnh báo
+  tempWarningSound.pause();
+  tempWarningSound.currentTime = 0;
+  document.getElementById("tempWarning").innerHTML = "";
+  alert("Đã tắt báo động nhiệt độ");
+}
+
+
+
+    function drawClockNumbers() {
+      for (let i = 1; i <= 12; i++) {
+        const angle = (i * 30) * Math.PI / 180;
+        const radius = 125;
+        const x = 150 + radius * Math.sin(angle);
+        const y = 150 - radius * Math.cos(angle);
+        const number = document.createElement("div");
+        number.className = "number";
+        number.style.left = `${x}px`;
+        number.style.top = `${y}px`;
+        number.innerText = i;
+        document.getElementById("clock").appendChild(number);
+      }
+    }
+
+    function updateClock() {
+      const date = new Date();
+      const h = date.getHours();
+      const m = date.getMinutes();
+      const s = date.getSeconds();
+      const hourDeg = (h % 12) * 30 + m * 0.5;
+      const minuteDeg = m * 6;
+      const secondDeg = s * 6;
+      document.getElementById("hourHand").style.transform = `rotate(${hourDeg}deg)`;
+      document.getElementById("minuteHand").style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById("secondHand").style.transform = `rotate(${secondDeg}deg)`;
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      document.getElementById("currentDate").innerText = `${day}/${month}/${year}`;
+
+      if (alarmSet && alarmTime) {
+        const currentStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        if (currentStr === alarmTime) {
+          playAlarm();
+          alarmSet = false;
+          document.getElementById("alarmTime").disabled = false;
+        }
+      }
+    }
+
+    window.onload = function () {
+    const savedAlarm = localStorage.getItem("alarmTime");
+    if (savedAlarm) {
+        document.getElementById("alarmTime").value = savedAlarm;
+        alarmTime = savedAlarm;
+        alarmSet = true;
+        document.getElementById("alarmTime").disabled = true;
+    }
+};
+
+
+function setAlarm() {
+    const input = document.getElementById("alarmTime").value;
+    if (!input) {
+        alert("Please set alarm time");
+        return;
+    }
+    alarmTime = input;
+    alarmSet = true;
+    document.getElementById("alarmTime").disabled = true;
+    
+    // Lưu vào localStorage
+    localStorage.setItem("alarmTime", alarmTime);
+    localStorage.setItem("alarmSet", "true");
+
+    alert("Alarm set for " + alarmTime);
+}
+
+
+
+    function playAlarm() {
+      if (alarmSound.paused || alarmSound.ended) {
+        alarmSound.currentTime = 0;
+        alarmSound.play();
+      }
+    }
+
+    function stopAlarm() {
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
+    tempWarningSound.pause();
+    tempWarningSound.currentTime = 0;
+    document.getElementById("tempWarning").innerHTML = "";
+
+    // Xóa khỏi localStorage
+    localStorage.removeItem("alarmTime");
+    localStorage.removeItem("alarmSet");
+
+    alarmSet = false;
+    document.getElementById("alarmTime").disabled = false;
+}
+
+
+    function updateTemperature() {
+  const temp = database.ref("/Sensor/temperature");
+  const humiRef = database.ref("/Sensor/humidity");
+
+  // Khôi phục ngưỡng từ LocalStorage nếu có
+  function loadThreshold() {
+    const savedThreshold = localStorage.getItem("tempThreshold");
+    if (savedThreshold !== null) {
+      document.getElementById("tempThreshold").value = savedThreshold;
+      console.log("Ngưỡng nhiệt độ được khôi phục:", savedThreshold);
+    }
+  }
+
+  // Lưu giá trị ngưỡng vào LocalStorage khi thay đổi
+  function saveThreshold() {
+    const threshold = parseFloat(document.getElementById("tempThreshold").value);
+    if (!isNaN(threshold)) {
+      localStorage.setItem("tempThreshold", threshold);
+      console.log("Ngưỡng nhiệt độ đã được lưu:", threshold);
+    }
+  }
+
+  // Gọi loadThreshold để khôi phục khi trang mở lại
+  loadThreshold();
+
+  // Theo dõi và cập nhật nhiệt độ
+  temp.on("value", (snapshot) => {
+    const temperature = snapshot.val();
+    document.getElementById("temperatureValue").innerText = temperature;
+
+    const threshold = parseFloat(document.getElementById("tempThreshold").value);
+    
+    // Lưu ngưỡng nếu có sự thay đổi
+    saveThreshold();
+
+    // Kiểm tra cảnh báo nếu nhiệt độ vượt ngưỡng
+    if (temperature >= threshold && tempAlarmEnabled) {
+      document.getElementById("tempWarning").innerHTML = '<p style="color:red;font-weight:bold; position: fixed; top: 430px; left: 1150px; transform: translate(-50%, -50%); font-size: 20px; background: white; padding: 10px; border: 2px solid red;"">⚠️ High Temperature! </p>';
+
+      if (tempWarningSound.paused || tempWarningSound.ended) {
+        tempWarningSound.currentTime = 0;
+        tempWarningSound.play();
+        turnOnFan();
+        firebase.database().ref("thietbi5").set({device1: 1})
+        turnOnSpeaker();
+        firebase.database().ref("thietbi6").set({device1: 1})
+        rengE();
+       
+      }
+
+      
+    } else {
+      document.getElementById("tempWarning").innerHTML = "";
+      tempWarningSound.pause();
+      tempWarningSound.currentTime = 0;
+      rengD();
+      
+      // 🛑 Tùy chọn: Nếu muốn tắt khi hết cảnh báo, mở dòng này 🛑
+
+    }
+
+    
+  });
+
+  // Sự kiện lưu ngưỡng mỗi khi có thay đổi
+  document.getElementById("tempThreshold").addEventListener('input', saveThreshold);
+}
+
+
+    const firebaseConfig = {
+          apiKey: "AIzaSyDUYbFI63SZmYV9SAyj_MCZcduuisIqxxc",
+          authDomain: "minhnode-1eacf.firebaseapp.com",
+          databaseURL: "https://minhnode-1eacf-default-rtdb.firebaseio.com",
+          projectId: "minhnode-1eacf",
+          storageBucket: "minhnode-1eacf.firebasestorage.app",
+          messagingSenderId: "1007786576866",
+          appId: "1:1007786576866:web:0810872495a6184ae747bb",
+          measurementId: "G-YF59ZNWLKC"
+      };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+  //functions
+  // make sure that the name in ' ' match with name of your database child
+
+
+    drawClockNumbers();
+    setInterval(updateClock, 100);
+    setInterval(updateTemperature, 500);
+
+   
+
+ 
+
+    // Lấy trạng thái từ Firebase
+    firebase.database().ref("thietbi5").on("value", (snapshot) => {
+        let data = snapshot.val();
+        if (data && data.device1 === 1) {
+            document.getElementById("fanImage").src = "img/fanon1.png";
+            localStorage.setItem("fanState", "on");
+        } else {
+            document.getElementById("fanImage").src = "img/fanoff1.png";
+            localStorage.setItem("fanState", "off");
+        }
+    });
+
+    firebase.database().ref("thietbi6").on("value", (snapshot) => {
+        let data = snapshot.val();
+        if (data && data.device1 === 1) {
+            document.getElementById("speakerImage").src = "img/chuong_on.png";
+            localStorage.setItem("speakerState", "on");
+        } else {
+            document.getElementById("speakerImage").src = "img/chuong_off.png";
+            localStorage.setItem("speakerState", "off");
+        }
+    });
+    window.onload = function () {
+    // Khôi phục trạng thái quạt và loa
+    fanState = localStorage.getItem("fanState");
+    if (fanState === "on") {
+        document.getElementById("fanImage").src = "img/fanon1.png";
+    } else {
+        document.getElementById("fanImage").src = "img/fanoff1.png";
+    }
+
+    const speakerState = localStorage.getItem("speakerState");
+    if (speakerState === "on") {
+        document.getElementById("speakerImage").src = "img/chuong_on.png";
+    } else {
+        document.getElementById("speakerImage").src = "img/chuong_off.png";
+    }
+    // Khôi phục giá trị báo thức
+    const savedAlarmTime = localStorage.getItem("alarmTime");
+    const savedAlarmSet = localStorage.getItem("alarmSet");
+
+    if (savedAlarmTime) {
+        document.getElementById("alarmTime").value = savedAlarmTime;
+        alarmTime = savedAlarmTime;
+        if (savedAlarmSet === "true") {
+            alarmSet = true;
+            document.getElementById("alarmTime").disabled = true;
+        }
+    }
+};
+
+    
+
+
+  </script>
+</body>
+</html>

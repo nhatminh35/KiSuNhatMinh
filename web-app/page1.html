@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng hiển thị dữ liệu từ Firebase</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+    <script src="functions.js"></script>
+   
+
+</head>
+<body>
+    <div class="font-main">
+    <div class="background">
+        <div class="body">    
+            <div class="main">
+            
+            <h1 style="text-align:center;">WELCOM TO SMART HOME</h1>
+            <h1 style="text-align:center;">Bảng Thu Thập Dữ Liệu </h1>
+     <div style="text-align: center; margin-top: 20px;">
+        <a href="index.html" style="font-size: 24px;">🔙 Quay về trang chính</a>
+      </div>
+    <h2>Nhiệt độ: <span id="nhietdo">--</span>°C | Độ ẩm: <span id="doam">--</span>%</h2>
+   
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Nhiệt Độ (°C)</th>
+                <th>Độ Ẩm (%)</th>
+                <th>Thời Gian</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dữ liệu sẽ tự động cập nhật -->
+        </tbody>
+     </table>
+        </div>
+          </div>   
+            </div>
+           
+            <div class="btn_trang2">
+                <button id="downloadPDF" class="btn waves-effect waves-light" style="margin: 20px; font-size: 30px;">
+                    Tải PDF
+                </button>
+            </div>
+            <div class="clear_storage">
+                <button id="CLEAR_STORAGE" class="btn waves-effect waves-light" style="margin: 20px; font-size: 30px;">
+                    CLEAR
+                </button>
+            </div>
+            
+        </div>
+</div>
+
+    <script>
+      // Cấu hình Firebase
+      const firebaseConfig = {
+          apiKey: "AIzaSyDUYbFI63SZmYV9SAyj_MCZcduuisIqxxc",
+          authDomain: "minhnode-1eacf.firebaseapp.com",
+          databaseURL: "https://minhnode-1eacf-default-rtdb.firebaseio.com",
+          projectId: "minhnode-1eacf",
+          storageBucket: "minhnode-1eacf.firebasestorage.app",
+          messagingSenderId: "1007786576866",
+          appId: "1:1007786576866:web:0810872495a6184ae747bb",
+          measurementId: "G-YF59ZNWLKC"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+  
+      let latestTemp = null;
+      let dataList = JSON.parse(localStorage.getItem("dataList")) || [];
+      // Hàm lấy thời gian thực
+      function getCurrentTime() {
+          let time = new Date();
+          let gio = String(time.getHours()).padStart(2, '0');
+          let phut = String(time.getMinutes()).padStart(2, '0');
+          let giay = String(time.getSeconds()).padStart(2, '0');
+          return `${gio}:${phut}:${giay}`;
+      }
+  
+      // Lắng nghe nhiệt độ từ Firebase
+      function saveTemperatureWithHumidity(nhietdo) {
+          database.ref("/Sensor/humidity").once("value").then((snapshot) => {
+              let doam = snapshot.val();
+              document.getElementById("doam").innerText = doam;
+              addRow(nhietdo, doam);
+          });
+      }
+  
+      function getFirebaseData() {
+          database.ref("/Sensor/temperature").on("value", (snapshot) => {
+              let nhietdo = snapshot.val();
+              if (nhietdo !== null && nhietdo !== latestTemp) {
+                  latestTemp = nhietdo;
+                  document.getElementById("nhietdo").innerText = nhietdo;
+                  saveTemperatureWithHumidity(nhietdo);
+              }
+          });
+      }
+      getFirebaseData();
+           // Khi nhiệt độ thay đổi, lấy độ ẩm hiện tại và lưu cả hai
+ 
+    function loadData() {
+    let table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
+    table.innerHTML = ""; // Xóa dữ liệu cũ trên bảng trước khi tải lại
+
+    dataList.forEach((data, index) => {
+        let newRow = table.insertRow();
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+
+        cell1.innerHTML = index + 1;
+        cell2.innerHTML = data.nhietdo;
+        cell3.innerHTML = data.doam;
+        cell4.innerHTML = data.time;
+    });
+}  
+function addRow(nhietdo, doam) {
+    let table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
+    
+    let currentTime = getCurrentTime(); // Lấy thời gian hiện tại
+
+    // Thêm dữ liệu mới vào danh sách
+    dataList.push({ nhietdo, doam, time: currentTime });
+
+    // Giữ tối đa 30 phần tử
+    if (dataList.length > 20) {
+        dataList.shift(); // Xóa phần tử đầu tiên (cũ nhất)
+        //dataList = []; // Xóa toàn bộ phần tử trong mảng
+    }
+
+    // Cập nhật localStorage
+    localStorage.setItem("dataList", JSON.stringify(dataList));
+
+    // Làm mới bảng dữ liệu
+    loadData();
+}
+
+      let nhietdo = localStorage.getItem("nhietdo") || "--";
+      let doam = localStorage.getItem("doam") || "--";
+
+// Thêm dữ liệu vào bảng khi tải trang
+loadData();
+
+// Giả lập cập nhật dữ liệu mới từ Firebase (thêm dữ liệu test)
+
+  </script>
+  <script>
+    document.getElementById("downloadPDF").addEventListener("click", function () {
+        let element = document.querySelector(".background"); // Chọn phần cần xuất PDF
+        html2pdf()
+            .set({
+                margin: 10,
+                filename: 'SmartHome_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            })
+            .from(element)
+            .save();
+        });
+            document.getElementById("CLEAR_STORAGE").addEventListener("click", function () {
+               
+                dataList = []; 
+                localStorage.removeItem("dataList"); // Xóa dữ liệu trong localStorage
+                loadData();
+                   
+     
+    });
+    </script>
+    
+
+    <script>
+        const alertSound = new Audio("mp3/coibaodong.mp3");
+      
+        function checkAlert() {
+          const alertState = localStorage.getItem("tempAlarmE");
+          if (alertState === "on") {
+            if (alertSound.paused || alertSound.ended) {
+              alertSound.currentTime = 0;
+              alertSound.play();
+            }
+          } else {
+            alertSound.pause();
+            alertSound.currentTime = 0;
+          }
+        }
+      
+        setInterval(checkAlert, 50);
+        // check image
+        
+      </script>
+      
